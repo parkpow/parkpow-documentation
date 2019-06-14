@@ -7,7 +7,6 @@ language_tabs: # must be one of https://git.io/vQNgJ
 
 toc_footers:
   - <a href='https://parkpow.com/'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -19,11 +18,9 @@ search: true
 
 Welcome to the Parkpow API!
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
 # Authentication
 
-Parkpow.com API is only available to registered users. You first have to register and **[get an API key](https://parkpow.com/)**. It has to be included in all API calls. The HTTP **headers** must contain:
+Parkpow.com API is only available to registered users. You first have to register and **[get an API key](https://app.parkpow.com/accounts/token/)**. It has to be included in all API calls. The HTTP **headers** must contain:
 
 `Authorization: Token API_TOKEN`
 
@@ -185,3 +182,25 @@ Parameter | Description
 
 license_plate | license_plate of Vehicle
 payment_status | payment status of Vehicle
+
+
+## LPR API
+
+```python
+python3 Path/to/transfer.py --source Path/to/source --parkpow-token yourtoken --archive Path/to/archive
+```
+
+This endpoint monitors the selected folder for new images and sends them to recognition.
+
+### POST Parameters
+
+Parameter | Type | Required | Description
+--------- | ---- | -------- | -----------
+
+--source | str | True | Where camera images are saved
+--archive | str | True | Where images are moved to archive after being processed
+--parkpow-token | str | True | API token for ParkPow
+--workers | int | False | Number of worker threads
+--alpr-api | str | False | URL of SDK API
+--api-url | str | False | API url
+
