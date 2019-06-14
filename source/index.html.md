@@ -179,7 +179,6 @@ This endpoint Create/Update a Vehicle with current payment status.
 
 Parameter | Description
 --------- | -----------
-
 license_plate | license_plate of Vehicle
 payment_status | payment status of Vehicle
 
@@ -194,13 +193,12 @@ This endpoint monitors the selected folder for new images and sends them to reco
 
 ### POST Parameters
 
-Parameter | Description
---------- | -----------
-
---source | Where camera images are saved
---archive | Where images are moved to archive after being processed
---parkpow-token | API token for ParkPow
---workers | Number of worker threads
---alpr-api | URL of SDK API
---api-url | API url
+Parameter | Type | Required | Description
+--------- | ---- | -------- | -----------
+source | str | True | Where camera images are saved
+archive | str | True | Where images are moved to archive after being processed
+parkpow-token | str | True | API token for ParkPow
+workers | int | False | Number of worker threads
+alpr-api | str | False | URL of SDK API
+api-url | str | False | API url
 
