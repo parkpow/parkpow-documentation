@@ -1,15 +1,12 @@
 ---
-title: API Reference
+title: Parkpow API Documentation
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
   - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+  - <a href='https://parkpow.com/'>Sign Up for a Developer Key</a>
 
 includes:
   - errors
@@ -19,80 +16,36 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Welcome to the Parkpow API!
 
 # Authentication
 
-> To authorize, use this code:
+Parkpow.com API is only available to registered users. You first have to register and **[get an API key](https://app.parkpow.com/accounts/token/)**. It has to be included in all API calls. The HTTP **headers** must contain:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`Authorization: Token API_TOKEN`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>API_TOKEN</code> with your personal API key.
 </aside>
 
-# Kittens
+# Parkings
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+## Get All Parkings
 
 ```python
-import kittn
+# pip install requests
+import requests
+from pprint import pprint
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+response = requests.post(
+    'https://app.parkpow.com/api/v1/parking-list/',
+    headers={'Authorization': 'Token API_TOKEN'})
+pprint(response.json())
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+curl "https://app.parkpow.com/api/v1/parking-list/"
+  -H "Authorization: Token API_TOKEN"
 ```
 
 > The above command returns JSON structured like this:
@@ -100,140 +53,168 @@ let kittens = api.kittens.get();
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "camera_set": [
+      {
+        "code": "101",
+        "name": "cam-101",
+        "type": "Entrance",
+        "latitude": "None",
+        "longitude": "None",
+        "notes": "notes"
+      },
+      {
+        "code": "102",
+        "name": "cam-102",
+        "type": "Exit",
+        "latitude": "None",
+        "longitude": "None",
+        "notes": "notes"
+      },
+    ], 
+    "name": "first-parking",
+    "parking_spaces": 100,
+    "absent_timer": 3
   },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
+    {
+    "camera_set": [
+      {
+        "code": "202",
+        "name": "cam-202",
+        "type": "Entrance",
+        "latitude": "None",
+        "longitude": "None",
+        "notes": "notes"
+      }
+    ], 
+    "name": "second-parking",
+    "parking_spaces": 120,
+    "absent_timer": 3
+  },
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all parkings.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`https://app.parkpow.com/api/v1/parking-list/`
 
-### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+## Get a Visit list
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
 
 ```python
-import kittn
+# pip install requests
+import requests
+from pprint import pprint
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+response = requests.post(
+    'https://app.parkpow.com/api/v1/visit-list/',
+    data={'start': '2019-06-10', 'end': '2019-06-11'},
+    headers={'Authorization': 'Token API_TOKEN'})
+pprint(response.json())
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "https://app.parkpow.com/api/v1/visit-list/"
+  -H "Authorization: Token API_TOKEN"
 ```
 
-```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+> The above command returns JSON structured like this:
+
+```json
+[{"id": 4, "vehicle": {"license_plate": "QWE1234", "status": "Authorized"}, "start_cam": {"code": "101", "name": "cam-101", "type": "Entrance", "latitude": "None", "longitude": "None", "notes": "notes"}, "end_cam": {"code": "102", "name": "cam-102", "type": "Exit", "latitude": "None", "longitude": "None", "notes": "notes"}, "start_img": "example.com/aaw1108_9YG0bJS.JPG", "end_img": "example.com/aaw1108_D5DiEqD.JPG", "duration": 4.0, "start_date": "2019-06-08T15:40:19.419745", "start_prediction": {"box": {"xmax": 257, "xmin": 166, "ymax": 260, "ymin": 223}, "plate": "ch102tc", "score": 0.853, "dscore": 0.936}, "end_date": "2019-06-09T15:40:19.419745", "end_prediction": "None"}]
+```
+
+This endpoint retrieves a list of Visits.
+
+### HTTP Request
+
+`GET https://app.parkpow.com/api/v1/visit-list/`
+
+### GET Parameters
+
+Parameter | Description
+--------- | -----------
+start | start of period
+end | end of period
+
+## Create/Update a Vehicle with current payment status
+
+
+```python
+# pip install requests
+import requests
+from pprint import pprint
+
+response = requests.post(
+    'https://app.parkpow.com/api/v1/create-vehicle/',
+    data={'license_plate': 'ABC1234', 'payment_status': 0},
+    headers={'Authorization': 'Token API_TOKEN'})
+pprint(response.json())
+```
+
+```shell
+curl "https://app.parkpow.com/api/v1/create-vehicle/"
+  -H "Authorization: Token API_TOKEN"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "license_plate": "ABC1234",
+  "payment_status" : 0
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint Create/Update a Vehicle with current payment status.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://app.parkpow.com/api/v1/create-vehicle/`
 
-### URL Parameters
+### POST Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+license_plate | license_plate of Vehicle
+payment_status | payment status of Vehicle
 
-## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+## LPR API
 
 ```python
-import kittn
+# pip install requests
+import requests
+from pprint import pprint
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
+response = requests.post(
+    'https://app.parkpow.com/api/v1/main-lpr-view',
+    data={
+            "results": [{
+                "plate": "ASD1234",
+            }],
+            "camera": "camera.code",
+            "filename": "image.name",
+            "fileurl": "path/to/file"
+        },
+    headers={'Authorization': 'Token API_TOKEN'},
+    files={"file": 'uploaded.file'})
+pprint(response.json())
 ```
 
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
+This endpoint monitors the selected folder for new images and sends them to recognition.
 
-```javascript
-const kittn = require('kittn');
+### POST Parameters
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Parameter | Type | Required | Description
+--------- | ---- | -------- | -----------
+source | str | True | Where camera images are saved
+archive | str | True | Where images are moved to archive after being processed
+parkpow-token | str | True | API token for ParkPow
+workers | int | False | Number of worker threads
+alpr-api | str | False | URL of SDK API
+api-url | str | False | API url
 
