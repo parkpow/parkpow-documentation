@@ -1,5 +1,5 @@
 ---
-title: Parkpow API Documentation
+title: ParkPow API Documentation
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
@@ -8,19 +8,17 @@ language_tabs: # must be one of https://git.io/vQNgJ
 toc_footers:
   - <a href='https://parkpow.com/'>Sign Up for a Developer Key</a>
 
-includes:
-  - errors
-
 search: true
 ---
 
-# Introduction
+# API DOCUMENTATION
 
-Welcome to the Parkpow API!
+Welcome to the ParkPow API! ParkPow is a software to manage and enforce parking lots. It lets you track vehicles, get custom alerts, enforce your parking rules.
+
 
 # Authentication
 
-Parkpow.com API is only available to registered users. You first have to register and **[get an API key](https://app.parkpow.com/accounts/token/)**. It has to be included in all API calls. The HTTP **headers** must contain:
+ParkPow.com API is only available to registered users. You first have to register and **[get an API key](https://app.parkpow.com/accounts/token/)**. It has to be included in all API calls. The HTTP **headers** must contain:
 
 `Authorization: Token API_TOKEN`
 
@@ -28,16 +26,62 @@ Parkpow.com API is only available to registered users. You first have to registe
 You must replace <code>API_TOKEN</code> with your personal API key.
 </aside>
 
-# Parkings
+# Import
 
-## Get All Parkings
+## Create or Update Vehicle Details
 
 ```python
-# pip install requests
 import requests
 from pprint import pprint
 
 response = requests.post(
+    'https://app.parkpow.com/api/v1/create-vehicle/',
+    data={'license_plate': 'ABC1234', 'payment_status': 0},
+    headers={'Authorization': 'Token API_TOKEN'})
+pprint(response.json())
+```
+
+```shell
+curl "https://app.parkpow.com/api/v1/create-vehicle/"
+  -H "Authorization: Token API_TOKEN"
+```
+
+> Returns the following JSON:
+
+```json
+{
+  "license_plate": "ABC1234",
+  "payment_status" : 0
+}
+```
+
+Purpose: Incorporate 3rd party data (e.g. tenant database, HR database, payment database) into ParkPow so that you can more fully understand the vehicles captured in the dashboard.
+
+### HTTP Request
+
+`POST https://app.parkpow.com/api/v1/create-vehicle/`
+
+### POST Parameters
+
+Parameter | Description
+--------- | -----------
+license_plate | License plate of vehicle.
+payment_status | Payment status.
+field1 | Custom field 1.
+field2 | Custom field 2.
+field3 | Custom field 3.
+field4 | Custom field 4.
+field5 | Custom field 5.
+field6 | Custom field 6.
+
+# Export
+
+## Export All Parking Data
+```python
+import requests
+from pprint import pprint
+
+response = requests.get(
     'https://app.parkpow.com/api/v1/parking-list/',
     headers={'Authorization': 'Token API_TOKEN'})
 pprint(response.json())
@@ -48,7 +92,7 @@ curl "https://app.parkpow.com/api/v1/parking-list/"
   -H "Authorization: Token API_TOKEN"
 ```
 
-> The above command returns JSON structured like this:
+> Returns the following JSON:
 
 ```json
 [
@@ -70,7 +114,7 @@ curl "https://app.parkpow.com/api/v1/parking-list/"
         "longitude": "None",
         "notes": "notes"
       },
-    ], 
+    ],
     "name": "first-parking",
     "parking_spaces": 100,
     "absent_timer": 3
@@ -85,7 +129,7 @@ curl "https://app.parkpow.com/api/v1/parking-list/"
         "longitude": "None",
         "notes": "notes"
       }
-    ], 
+    ],
     "name": "second-parking",
     "parking_spaces": 120,
     "absent_timer": 3
@@ -93,18 +137,21 @@ curl "https://app.parkpow.com/api/v1/parking-list/"
 ]
 ```
 
-This endpoint retrieves all parkings.
+Purpose: Retrieve all parking data including the cameras associated with each parking lot.
 
 ### HTTP Request
 
-`https://app.parkpow.com/api/v1/parking-list/`
+`GET https://app.parkpow.com/api/v1/parking-list/`
 
+<!--
+## Export License Plate Data
 
-## Get a Visit list
+Purpose: Retrieve entry and exit information for a particular license plate from the last given number of occurrences. This can be utilized to help end consumers locate the parking lot of their vehicle for a specific license plate. The “last given number of occurrences” is in descending order from the present, so to get the last, most recent occurrence, set the parameter to 1.
+-->
 
+## Export Vehicle Visits
 
 ```python
-# pip install requests
 import requests
 from pprint import pprint
 
@@ -121,13 +168,13 @@ curl "https://app.parkpow.com/api/v1/visit-list/"
 ```
 
 
-> The above command returns JSON structured like this:
+> Returns the following JSON:
 
 ```json
 [{"id": 4, "vehicle": {"license_plate": "QWE1234", "status": "Authorized"}, "start_cam": {"code": "101", "name": "cam-101", "type": "Entrance", "latitude": "None", "longitude": "None", "notes": "notes"}, "end_cam": {"code": "102", "name": "cam-102", "type": "Exit", "latitude": "None", "longitude": "None", "notes": "notes"}, "start_img": "example.com/aaw1108_9YG0bJS.JPG", "end_img": "example.com/aaw1108_D5DiEqD.JPG", "duration": 4.0, "start_date": "2019-06-08T15:40:19.419745", "start_prediction": {"box": {"xmax": 257, "xmin": 166, "ymax": 260, "ymin": 223}, "plate": "ch102tc", "score": 0.853, "dscore": 0.936}, "end_date": "2019-06-09T15:40:19.419745", "end_prediction": "None"}]
 ```
 
-This endpoint retrieves a list of Visits.
+Purpose: retrieve all visits made during a period. If the period is omitted, retrieve all visits made during the last 24 hours.
 
 ### HTTP Request
 
@@ -137,84 +184,45 @@ This endpoint retrieves a list of Visits.
 
 Parameter | Description
 --------- | -----------
-start | start of period
-end | end of period
+start | Start of period.
+end | End of period.
 
-## Create/Update a Vehicle with current payment status
+# Integration
 
-
-```python
-# pip install requests
-import requests
-from pprint import pprint
-
-response = requests.post(
-    'https://app.parkpow.com/api/v1/create-vehicle/',
-    data={'license_plate': 'ABC1234', 'payment_status': 0},
-    headers={'Authorization': 'Token API_TOKEN'})
-pprint(response.json())
-```
-
-```shell
-curl "https://app.parkpow.com/api/v1/create-vehicle/"
-  -H "Authorization: Token API_TOKEN"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "license_plate": "ABC1234",
-  "payment_status" : 0
-}
-```
-
-This endpoint Create/Update a Vehicle with current payment status.
-
-### HTTP Request
-
-`POST https://app.parkpow.com/api/v1/create-vehicle/`
-
-### POST Parameters
-
-Parameter | Description
---------- | -----------
-license_plate | license_plate of Vehicle
-payment_status | payment status of Vehicle
-
-
-## LPR API
+## Send Camera Images and License Plate Data
 
 ```python
-# pip install requests
 import requests
 from pprint import pprint
+import os
 
+path = '/tmp/my-image.jpg'
+alpr_results = [dict(plate='abcd1234')]
+filename, _ = os.path.split(path)
 response = requests.post(
     'https://app.parkpow.com/api/v1/main-lpr-view',
     data={
-            "results": [{
-                "plate": "ASD1234",
-            }],
-            "camera": "camera.code",
-            "filename": "image.name",
-            "fileurl": "path/to/file"
+            "results": alpr_results,
+            "camera": "camera_code",
         },
     headers={'Authorization': 'Token API_TOKEN'},
-    files={"file": 'uploaded.file'})
+    files={"image": (filename, open(path, 'rb'), 'application/octet-stream')})
 pprint(response.json())
 ```
+```shell
+# See Python example
+```
 
-This endpoint monitors the selected folder for new images and sends them to recognition.
+> Returns the string:
+`OK`
+
+
+Purpose: integrate your cameras and ALPR software with ParkPow.
 
 ### POST Parameters
 
 Parameter | Type | Required | Description
 --------- | ---- | -------- | -----------
-source | str | True | Where camera images are saved
-archive | str | True | Where images are moved to archive after being processed
-parkpow-token | str | True | API token for ParkPow
-workers | int | False | Number of worker threads
-alpr-api | str | False | URL of SDK API
-api-url | str | False | API url
-
+camera | string | True | Code of the camera capturing the image.
+image | file | True | Image captured by the camera.
+results| JSON | True | License plate detected by the ALPR software (for example Plate Recognizer SDK).
