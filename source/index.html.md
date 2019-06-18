@@ -186,7 +186,23 @@ payment_status | payment status of Vehicle
 ## LPR API
 
 ```python
-python3 Path/to/transfer.py --source Path/to/source --parkpow-token yourtoken --archive Path/to/archive
+# pip install requests
+import requests
+from pprint import pprint
+
+response = requests.post(
+    'https://app.parkpow.com/api/v1/main-lpr-view',
+    data={
+            "results": [{
+                "plate": "ASD1234",
+            }],
+            "camera": "camera.code",
+            "filename": "image.name",
+            "fileurl": "path/to/file"
+        },
+    headers={'Authorization': 'Token API_TOKEN'},
+    files={"file": 'uploaded.file'})
+pprint(response.json())
 ```
 
 This endpoint monitors the selected folder for new images and sends them to recognition.
