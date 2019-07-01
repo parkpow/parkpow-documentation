@@ -226,3 +226,16 @@ Parameter | Type | Required | Description
 camera | string | True | Code of the camera capturing the image.
 image | file | True | Image captured by the camera.
 results| JSON | True | License plate detected by the ALPR software (for example Plate Recognizer SDK).
+
+## Automatic Image Transfer
+
+Automatic Image Transfer is a command line tool that runs our [ALPR SDK](https://platerecognizer.com) and sends the results to ParkPow.
+
+It monitors a directory and all its sub-directories. When a new image is added, it passes them to the SDK that reads license plates. The data is then sent to our parking management service Parkpow. Once processed, images are moved to an archive directory.
+
+To get started call `python transfer.py --help`
+
+### Requirements:
+- Plate Recognizer SDK
+- A Parkpow account
+- Python3
