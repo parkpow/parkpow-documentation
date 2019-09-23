@@ -26,6 +26,59 @@ ParkPow.com API is only available to registered users. You first have to registe
 You must replace <code>API_TOKEN</code> with your personal API key.
 </aside>
 
+# Cameras
+
+## Create or Update Camera Details
+
+```python
+import requests
+from pprint import pprint
+response = requests.post(
+    'https://app.parkpow.com/api/v1/create-camera/',
+    data={'code': 'Entrance1', 'name':'Entrance 1', 'type':'ENTRANCE' 'Notes': 'Front gate', 'longitude': 0.33, 'latitude': 0.333},
+    headers={'Authorization': 'Token API_TOKEN'})
+pprint(response.json())
+
+```
+
+```shell
+curl -X POST "https://app.parkpow.com/api/v1/create-camera/" \
+  -H "Authorization: Token API_TOKEN" \ 
+  -d '{"code": "Entrance1", "name":"Entrance 1", "type":"ENTRANCE", "Notes": "Front gate", "longitude": 0.33, "latitude": 0.333}'
+
+```
+
+> Returns the following JSON:
+
+```json
+  {
+    "code": "Entrance1", 
+    "name":"Entrance 1", 
+    "type":"ENTRANCE", 
+    "Notes": "Front gate", 
+    "longitude": 0.33, 
+    "latitude": 0.333
+  }
+```
+
+This API endpoint is used to create or update a camera object used while integrating your data into ParkPow. Your are adviced to create a few cameras (Entrance, Exist or Spot) before using the integration api.
+
+### HTTP Request
+
+`POST "https://app.parkpow.com/api/v1/create-camera/`
+
+### POST Parameters
+
+Parameter | Description | Mandatory | Value type
+--------- | ----------- | --------- | ----------
+code | unique identifier | True | String
+name | Human readable camera name | True | String
+type | options are ENTRANCE, EXIT or SPOT, Defaults to SPOT | False | String
+notes | long description about the camera | False | String
+longitute | Camera longitude | False | Float
+latitude | Camera latitude | False | Float
+
+
 # Import
 
 ## Create or Update Vehicle Details
