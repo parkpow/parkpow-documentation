@@ -11,7 +11,7 @@ toc_footers:
 search: true
 ---
 
-# API DOCUMENTATION
+# ParkPow API
 
 Welcome to the ParkPow API! ParkPow is a software to manage and enforce parking lots. It lets you track vehicles, get custom alerts, enforce your parking rules.
 
@@ -43,7 +43,7 @@ pprint(response.json())
 
 ```shell
 curl -X POST "https://app.parkpow.com/api/v1/create-camera/" \
-  -H "Authorization: Token API_TOKEN" \ 
+  -H "Authorization: Token API_TOKEN" \
   -d '{"code": "Entrance1", "name":"Entrance 1", "type":"ENTRANCE", "Notes": "Front gate", "longitude": 0.33, "latitude": 0.333}'
 
 ```
@@ -52,11 +52,11 @@ curl -X POST "https://app.parkpow.com/api/v1/create-camera/" \
 
 ```json
   {
-    "code": "Entrance1", 
-    "name":"Entrance 1", 
-    "type":"ENTRANCE", 
-    "Notes": "Front gate", 
-    "longitude": 0.33, 
+    "code": "Entrance1",
+    "name":"Entrance 1",
+    "type":"ENTRANCE",
+    "Notes": "Front gate",
+    "longitude": 0.33,
     "latitude": 0.333
   }
 ```
@@ -75,7 +75,7 @@ code | unique identifier | True | String
 name | Human readable camera name | True | String
 type | options are ENTRANCE, EXIT or SPOT, Defaults to SPOT | False | String
 notes | long description about the camera | False | String
-longitute | Camera longitude | False | Float
+longitude | Camera longitude | False | Float
 latitude | Camera latitude | False | Float
 
 
@@ -253,7 +253,7 @@ path = '/tmp/my-image.jpg'
 alpr_results = [dict(plate='abcd1234')]
 filename, _ = os.path.split(path)
 response = requests.post(
-    'https://app.parkpow.com/api/v1/main-lpr-view',
+    'https://app.parkpow.com/api/v1/log-vehicle',
     data={
             "results": alpr_results,
             "camera": "camera_code",
@@ -271,6 +271,10 @@ pprint(response.json())
 
 
 Purpose: integrate your cameras and ALPR software with ParkPow.
+
+### HTTP Request
+
+`POST https://app.parkpow.com/api/v1/visit-list/`
 
 ### POST Parameters
 
