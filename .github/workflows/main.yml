@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Slate Documentation builder
-        uses: Decathlon/slate-builder-action@v1.0.0
+        uses: docker://decathlon/slate-builder-action:2.0.0
         env:
-          DOC_BASE_FOLDER = source
-          ZIP_BUILD = false
+          DOC_BASE_FOLDER: source
+          ZIP_BUILD: false
