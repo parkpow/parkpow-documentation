@@ -27,7 +27,6 @@ jobs:
         env:
           DOC_BASE_FOLDER: source
           ZIP_BUILD: false
-      - run: find .
       - name: rsync deployments
         uses: burnett01/rsync-deployments@4.1
         with:
